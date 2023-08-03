@@ -1,8 +1,6 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
-# from models import parser,UserData
 from flask_restful import reqparse, fields
-import uuid
 import jwt
 import datetime
 
@@ -23,7 +21,7 @@ class UserData(db.Model):
     age = db.Column(db.Integer, nullable=False)
     gender = db.Column(db.String(10), nullable=False)
     password = db.Column(db.String(128), nullable=False)
-    key = db.Column(db.String(120),unique=True)
+    key = db.Column(db.String(120), unique=True)
     value = db.Column(db.String(120))
     token = db.Column(db.String(500))
 
@@ -85,7 +83,7 @@ def register():
             "message": "Invalid request. Please provide all required fields: {}.".format(", ".join(missing_fields))
         }
         return jsonify(error_response), 400
-    
+
     existing_user = UserData.query.filter_by(username=args['username']).first()
     if existing_user:
         error_response = {
@@ -94,8 +92,9 @@ def register():
             "message": "Username already exists. Please choose a different username."
         }
         return jsonify(error_response), 400
-    
-    existing_email = UserData.query.filter_by(username=args['username']).first()
+
+    existing_email = UserData.query.filter_by(
+        username=args['username']).first()
     if existing_email:
         error_response = {
             "status": "error",
@@ -103,7 +102,7 @@ def register():
             "message": "Email already exists. Please choose a different email."
         }
         return jsonify(error_response), 400
-    
+
     if not validate_password(args['password']):
         error_response = {
             "status": "error",
@@ -111,15 +110,15 @@ def register():
             "message": "Invalid password. Password must be at least 8 characters long and contain a mix of uppercase and lowercase letters, numbers, and special characters."
         }
         return jsonify(error_response), 400
-    
-    if not isinstance(args['age'],int) or args['age'] <= 0:
+
+    if not isinstance(args['age'], int) or args['age'] <= 0:
         error_response = {
             "status": "error",
             "code": "INVALID_AGE",
             "message": "Invalid age value. Age must be a positive integer."
         }
         return jsonify(error_response), 400
-    
+
     if not args['gender']:
         error_response = {
             "status": "error",
@@ -166,15 +165,12 @@ def login():
     password = data.get('password')
 
     if not username or not password:
-        return jsonify({'code':'MISSING_FIELDS','message':'Missing fields. Please provide both username and password.'})
+        return jsonify({'code': 'MISSING_FIELDS', 'message': 'Missing fields. Please provide both username and password.'})
     user = UserData.query.filter_by(
         username=username, password=password).first()
-    
 
     if not user:
-        return jsonify({'code': 'INVALID_CREDENTIALS','message':'Invalid credentials. The provided username or password is incorrect.'}), 401
-  
-        
+        return jsonify({'code': 'INVALID_CREDENTIALS', 'message': 'Invalid credentials. The provided username or password is incorrect.'}), 401
 
     token = jwt.encode({'user_id': user.id, 'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=1)},
                        app.config['SECRET_KEY'], algorithm='HS256')
@@ -193,12 +189,12 @@ def store_data():
     value = data.get('value')
 
     if not key:
-        return jsonify({'code':'INVALID_KEY','message': 'The provided key is not valid or missing.'}), 400
-    
-    if not value:
-        return jsonify({'code':'INVALID_VALUE','message': 'The provided value is not valid or missing.'}), 400
+        return jsonify({'code': 'INVALID_KEY', 'message': 'The provided key is not valid or missing.'}), 400
 
-    existing_key =  UserData.query.filter_by(key=key).first()
+    if not value:
+        return jsonify({'code': 'INVALID_VALUE', 'message': 'The provided value is not valid or missing.'}), 400
+
+    existing_key = UserData.query.filter_by(key=key).first()
     if existing_key:
         error_response = {
             "status": "error",
@@ -264,7 +260,6 @@ def delete_data(key):
 
 def authenticate_user():
     token = request.headers.get('Authorization')
-    # print("Received headers:", request.headers)
     if not token:
         return jsonify({'message': 'Authorization token missing'}), 401
 
@@ -282,7 +277,8 @@ def authenticate_user():
 def validate_password(password):
 
     return len(password) >= 8 and any(char.isupper() for char in password) and any(char.islower() for char in password) and \
-            any(char.isdigit() for char in password) and any(char in "!@#$%^&*()-_=+[]{}|;:'\",.<>/?\\" for char in password)
+        any(char.isdigit() for char in password) and any(
+            char in "!@#$%^&*()-_=+[]{}|;:'\",.<>/?\\" for char in password)
 
 
 if __name__ == '__main__':
