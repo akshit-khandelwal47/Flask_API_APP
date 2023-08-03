@@ -56,3 +56,9 @@ To set up and run the backend system locally, follow these steps:
    ```bash
    git clone <repository_url>
    cd FLASK_API_APP
+
+2. `pip install -r requirements.txt`
+
+3. `python -m flask run`
+
+4. Access the APIs at `http://127.0.0.1:5000/`
