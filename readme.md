@@ -6,10 +6,8 @@ This is a backend system implemented in Python using Flask, SQLAlchemy, and JWT 
 - [Getting Started](#getting-started)
 - [API Endpoints](#api-endpoints)
 - [Installation](#installation)
-- [Usage](#usage)
-- [Environment Variables](#environment-variables)
-- [Contributing](#contributing)
-- [License](#license)
+- [Postman](#postman)
+
 
 ## Getting Started
 
@@ -61,4 +59,21 @@ To set up and run the backend system locally, follow these steps:
 
 3. `python -m flask run`
 
-4. Access the APIs at `http://127.0.0.1:5000/`
+4. Access the APIs at `http://127.0.0.1:5000/{endpoint}`
+
+## Postman
+
+To test the APIs, follow these steps:
+
+1. For User Registration and Generate Token endpoint, send the required data in body section of postman in json
+   ```bash
+   {
+  "username": "mavi",
+  "email": "mavi@gmail.com",
+  "full_name": "harman singh",
+  "age": 26,
+  "gender": "male",
+  "password": "Aksh@234"
+   }
+
+2. For all other endpoints, need to pass the authorization token in the request headers. For that just add a key `Authorization` in headers  and  value as the *token* generated at `/api/token` endpoint.
