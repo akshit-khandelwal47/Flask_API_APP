@@ -48,3 +48,11 @@ This backend system provides a set of APIs that allow users to register, generat
    - Description: Delete a key-value pair from the database for the authenticated user.
 
 
+## Installation
+
+To set up and run the backend system locally, follow these steps:
+
+1. Clone the repository:
+   ```bash
+   git clone <repository_url>
+   cd FLASK_API_APP
