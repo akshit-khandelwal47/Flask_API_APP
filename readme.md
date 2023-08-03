@@ -65,15 +65,12 @@ To set up and run the backend system locally, follow these steps:
 
 To test the APIs, follow these steps:
 
-1. For User Registration and Generate Token endpoint, send the required data in body section of postman in json
+1. For User Registration and Generate Token endpoint, send the required data in body section of postman in json.
    ```bash
    {
-  "username": "mavi",
-  "email": "mavi@gmail.com",
-  "full_name": "harman singh",
-  "age": 26,
-  "gender": "male",
-  "password": "Aksh@234"
+   "username": "mavi",
+   "password": "Aksh@234"
    }
+   
 
 2. For all other endpoints, need to pass the authorization token in the request headers. For that just add a key `Authorization` in headers  and  value as the *token* generated at `/api/token` endpoint.
